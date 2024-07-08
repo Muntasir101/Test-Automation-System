@@ -3,6 +3,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import os
+import datetime
+
+
+def capture_screenshot(driver, test_name):
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    screenshot_name = f"{test_name}_{timestamp}.png"
+    screenshot_path = os.path.join(os.path.dirname(__file__), 'failed_screenshots', screenshot_name)
+    os.makedirs(os.path.dirname(screenshot_path), exist_ok=True)
+    driver.save_screenshot(screenshot_path)
 
 
 @pytest.fixture
@@ -36,30 +46,55 @@ def login(driver, email, password):
 
 
 def test_login_valid_credentials(driver):
-    login(driver, 'mail123@gmail.com', '123456')
-    WebDriverWait(driver, 10).until(EC.url_changes('https://tutorialsninja.com/demo/index.php?route=account/login'))
-    assert driver.current_url == 'https://tutorialsninja.com/demo/index.php?route=account/account'
+    test_name = 'test_login_valid_credentials'
+    try:
+        login(driver, 'mail123@gmail.com', '123456')
+        WebDriverWait(driver, 10).until(EC.url_changes('https://tutorialsninja.com/demo/index.php?route=account/login'))
+        assert driver.current_url == 'https://tutorialsninja.com/demo/index.php?route=account/account'
+    except Exception as e:
+        capture_screenshot(driver, test_name)
+        raise e
 
 
 def test_login_invalid_email(driver):
-    login(driver, 'invalid_email', '123456')
-    error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
-    assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    test_name = 'test_login_invalid_email'
+    try:
+        login(driver, 'invalid_email', '123456')
+        error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
+        assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    except Exception as e:
+        capture_screenshot(driver, test_name)
+        raise e
 
 
 def test_login_invalid_password(driver):
-    login(driver, 'mail123@gmail.com', 'invalid_password')
-    error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
-    assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    test_name = 'test_login_invalid_password'
+    try:
+        login(driver, 'mail123@gmail.com', 'invalid_password')
+        error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
+        assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    except Exception as e:
+        capture_screenshot(driver, test_name)
+        raise e
 
 
 def test_login_empty_email(driver):
-    login(driver, '', '123456')
-    error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
-    assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    test_name = 'test_login_empty_email'
+    try:
+        login(driver, '', 'invalid_password')
+        error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
+        assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    except Exception as e:
+        capture_screenshot(driver, test_name)
+        raise e
 
 
 def test_login_empty_password(driver):
-    login(driver, 'mail123@gmail.com', '')
-    error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
-    assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    test_name = 'test_login_empty_password'
+    try:
+        login(driver, 'mail123@gmail.com', '')
+        error_message = driver.find_element(By.CSS_SELECTOR, ".alert-dismissible")
+        assert 'Warning: No match for E-Mail Address and/or Password.' in error_message.text
+    except Exception as e:
+        capture_screenshot(driver, test_name)
+        raise e
