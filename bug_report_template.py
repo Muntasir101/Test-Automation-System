@@ -1,6 +1,7 @@
 from docx import Document
 from docx.shared import Inches
 
+
 class BugReportTemplate:
     def __init__(self):
         self.template = {
