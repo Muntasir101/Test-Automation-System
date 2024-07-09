@@ -3,8 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from login_bug_report_generator import generate_bug_report
-from screenshot_utils import capture_screenshot
+from bug_report_generator.login_bug_report_generator import generate_bug_report
+from utils.screenshot_utils import capture_screenshot
 
 
 @pytest.fixture
