@@ -1,6 +1,6 @@
 import os
 import datetime
-from bug_report_template import BugReportTemplate
+from login_bug_report_template import BugReportTemplate
 from email_utils import send_email
 
 
